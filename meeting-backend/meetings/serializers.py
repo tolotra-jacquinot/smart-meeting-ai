@@ -1,6 +1,9 @@
+import os
 from rest_framework import serializers
-from .models import Meeting
+from .models import Meeting, AudioFile
 
+from rest_framework import serializers
+from .models import Meeting, AudioFile
 
 class MeetingSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -24,4 +27,57 @@ class MeetingSerializer(serializers.ModelSerializer):
             'status',
             'created_at',
             'updated_at',
+        ]
+
+class AudioFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AudioFile
+        fields = [
+            'id',
+            'meeting',
+            'file',
+            'original_name',
+            'uploaded_at',
+        ]
+        read_only_fields = [
+            'id',
+            'original_name',
+            'uploaded_at',
+        ]
+
+    def validate_file(self, value):
+        allowed_extensions = ['.mp3', '.wav', '.m4a']
+        max_size = 100 * 1024 * 1024  # 100 Mo
+
+        extension = os.path.splitext(value.name)[1].lower()
+
+        if extension not in allowed_extensions:
+            raise serializers.ValidationError(
+                "Format audio non autorisé. Formats acceptés : MP3, WAV, M4A."
+            )
+
+        if value.size > max_size:
+            raise serializers.ValidationError(
+                "Le fichier audio ne doit pas dépasser 100 Mo."
+            )
+
+        return value
+
+class AudioFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AudioFile
+        fields = [
+            'id',
+            'meeting',
+            'file',
+            'original_name',
+            'duration',
+            'uploaded_at',
+        ]
+
+        read_only_fields = [
+            'id',
+            'original_name',
+            'duration',
+            'uploaded_at',
         ]

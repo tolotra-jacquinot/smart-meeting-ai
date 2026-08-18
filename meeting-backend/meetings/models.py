@@ -40,3 +40,32 @@ class Meeting(models.Model):
 
     def __str__(self):
         return self.title
+
+class AudioFile(models.Model):
+    meeting = models.ForeignKey(
+        Meeting,
+        on_delete=models.CASCADE,
+        related_name='audio_files',
+    )
+
+    file = models.FileField(
+        upload_to='meetings/audio/'
+    )
+
+    original_name = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    duration = models.FloatField(
+        null=True,
+        blank=True,
+        help_text="Durée de l'audio en secondes",
+    )
+
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.original_name or self.file.name
