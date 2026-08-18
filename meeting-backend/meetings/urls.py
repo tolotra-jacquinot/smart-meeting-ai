@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     MeetingListCreateView,
     MeetingDetailView,
+    AudioUploadView,
 )
 
 
@@ -16,5 +17,10 @@ urlpatterns = [
         'meetings/<int:pk>/',
         MeetingDetailView.as_view(),
         name='meeting-detail',
+    ),
+    path(
+        'audio/',
+        AudioUploadView.as_view(),
+        name='audio-upload',
     ),
 ]
