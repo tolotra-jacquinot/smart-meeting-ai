@@ -6,7 +6,6 @@ class InvalidAudioError(Exception):
 
 
 def validate_audio_with_ffprobe(file_path):
-    print("===== VALIDATION AUDIO APPELEE =====")
     print("FICHIER :", file_path)
 
     probe_command = [
@@ -27,10 +26,6 @@ def validate_audio_with_ffprobe(file_path):
         capture_output=True,
         text=True,
     )
-
-    print("FFPROBE CODE :", probe_result.returncode)
-    print("FFPROBE OUTPUT :", probe_result.stdout)
-    print("FFPROBE ERROR :", probe_result.stderr)
 
     codec = probe_result.stdout.strip()
 
@@ -57,9 +52,6 @@ def validate_audio_with_ffprobe(file_path):
         capture_output=True,
         text=True,
     )
-
-    print("FFMPEG CODE :", decode_result.returncode)
-    print("FFMPEG ERROR :", decode_result.stderr)
 
     if decode_result.returncode != 0:
         raise InvalidAudioError(
